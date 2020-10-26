@@ -36,6 +36,9 @@
             this.ReloadConsoleApiButton = new System.Windows.Forms.Button();
             this.ConsoleWebOutput = new System.Windows.Forms.TextBox();
             this.ConsoleWebOutputLabel = new System.Windows.Forms.TextBox();
+            this.ClearFauxEngineButton = new System.Windows.Forms.Button();
+            this.ClearAPITerminalButton = new System.Windows.Forms.Button();
+            this.ClearWebTerminalButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // FauxEngineOutput
@@ -107,9 +110,10 @@
             this.RefreshFauxEngineButton.Name = "RefreshFauxEngineButton";
             this.RefreshFauxEngineButton.Size = new System.Drawing.Size(204, 51);
             this.RefreshFauxEngineButton.TabIndex = 2;
+            this.RefreshFauxEngineButton.Tag = "Faux";
             this.RefreshFauxEngineButton.Text = "Reload faux-engine";
             this.RefreshFauxEngineButton.UseVisualStyleBackColor = true;
-            this.RefreshFauxEngineButton.Click += new System.EventHandler(this.RefreshFauxEngineButton_Click);
+            this.RefreshFauxEngineButton.Click += new System.EventHandler(this.RefreshTerminal_Click);
             // 
             // ReloadConsoleApiButton
             // 
@@ -120,9 +124,10 @@
             this.ReloadConsoleApiButton.Name = "ReloadConsoleApiButton";
             this.ReloadConsoleApiButton.Size = new System.Drawing.Size(204, 51);
             this.ReloadConsoleApiButton.TabIndex = 2;
+            this.ReloadConsoleApiButton.Tag = "API";
             this.ReloadConsoleApiButton.Text = "Reload Console-API";
             this.ReloadConsoleApiButton.UseVisualStyleBackColor = true;
-            this.ReloadConsoleApiButton.Click += new System.EventHandler(this.ReloadConsoleApiButton_Click);
+            this.ReloadConsoleApiButton.Click += new System.EventHandler(this.RefreshTerminal_Click);
             // 
             // ConsoleWebOutput
             // 
@@ -154,12 +159,54 @@
             this.ConsoleWebOutputLabel.TabIndex = 1;
             this.ConsoleWebOutputLabel.Text = "Console-Web Output";
             // 
+            // ClearFauxEngineButton
+            // 
+            this.ClearFauxEngineButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ClearFauxEngineButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ClearFauxEngineButton.Location = new System.Drawing.Point(86, 220);
+            this.ClearFauxEngineButton.Name = "ClearFauxEngineButton";
+            this.ClearFauxEngineButton.Size = new System.Drawing.Size(204, 48);
+            this.ClearFauxEngineButton.TabIndex = 3;
+            this.ClearFauxEngineButton.Tag = "Faux";
+            this.ClearFauxEngineButton.Text = "Clear terminal";
+            this.ClearFauxEngineButton.UseVisualStyleBackColor = true;
+            this.ClearFauxEngineButton.Click += new System.EventHandler(this.ClearTerminal_Click);
+            // 
+            // ClearAPITerminalButton
+            // 
+            this.ClearAPITerminalButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ClearAPITerminalButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ClearAPITerminalButton.Location = new System.Drawing.Point(86, 533);
+            this.ClearAPITerminalButton.Name = "ClearAPITerminalButton";
+            this.ClearAPITerminalButton.Size = new System.Drawing.Size(204, 48);
+            this.ClearAPITerminalButton.TabIndex = 3;
+            this.ClearAPITerminalButton.Tag = "API";
+            this.ClearAPITerminalButton.Text = "Clear terminal";
+            this.ClearAPITerminalButton.UseVisualStyleBackColor = true;
+            this.ClearAPITerminalButton.Click += new System.EventHandler(this.ClearTerminal_Click);
+            // 
+            // ClearWebTerminalButton
+            // 
+            this.ClearWebTerminalButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ClearWebTerminalButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ClearWebTerminalButton.Location = new System.Drawing.Point(86, 835);
+            this.ClearWebTerminalButton.Name = "ClearWebTerminalButton";
+            this.ClearWebTerminalButton.Size = new System.Drawing.Size(204, 48);
+            this.ClearWebTerminalButton.TabIndex = 3;
+            this.ClearWebTerminalButton.Tag = "Web";
+            this.ClearWebTerminalButton.Text = "Clear terminal";
+            this.ClearWebTerminalButton.UseVisualStyleBackColor = true;
+            this.ClearWebTerminalButton.Click += new System.EventHandler(this.ClearTerminal_Click);
+            // 
             // OutputWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.ClientSize = new System.Drawing.Size(1920, 1156);
+            this.Controls.Add(this.ClearWebTerminalButton);
+            this.Controls.Add(this.ClearAPITerminalButton);
+            this.Controls.Add(this.ClearFauxEngineButton);
             this.Controls.Add(this.ReloadConsoleApiButton);
             this.Controls.Add(this.RefreshFauxEngineButton);
             this.Controls.Add(this.ConsoleWebOutputLabel);
@@ -187,6 +234,9 @@
         private System.Windows.Forms.Button ReloadConsoleApiButton;
         private System.Windows.Forms.TextBox ConsoleWebOutput;
         private System.Windows.Forms.TextBox ConsoleWebOutputLabel;
+        private System.Windows.Forms.Button ClearFauxEngineButton;
+        private System.Windows.Forms.Button ClearAPITerminalButton;
+        private System.Windows.Forms.Button ClearWebTerminalButton;
     }
 }
 

@@ -43,13 +43,9 @@ namespace LaunchConsole_APIDev
             DevEnvironmentTasks.StartNew(StartConsoleWeb);
         }
 
-        public void RefreshComponent(DevComponent terminalType)
+        public void SendCommand(DevComponent terminalType, List<string>commands)
         {
             Process matchingTerminalProcess = null;
-            List<string> commands = new List<string>()
-            {
-                "rs"
-            };
 
             switch (terminalType)
             {

@@ -43,19 +43,45 @@ namespace LaunchConsole_APIDev
             }
         }
 
-        private void RefreshFauxEngineButton_Click(object sender, EventArgs e)
+        private void RefreshTerminal_Click (object sender, EventArgs e)
         {
-            DevManager.DevEnvironmentTasks.StartNew(() => DevManager.RefreshComponent(DevComponent.FauxEngine));
+            Button activeButton = sender as Button;
+            List<string> commands = new List<string>() { "rs" };
+
+            if (activeButton != null)
+            {
+                DevComponent terminalContext = GetCallingContextType(activeButton);
+
+                if (terminalContext != DevComponent.None)
+                {
+                    DevManager.DevEnvironmentTasks.StartNew(() => DevManager.SendCommand(terminalContext, commands));
+                }       
+            } 
         }
 
-        private void ReloadConsoleApiButton_Click(object sender, EventArgs e)
+        private void ClearTerminal_Click(object sender, EventArgs e)
         {
-            DevManager.DevEnvironmentTasks.StartNew(() => DevManager.RefreshComponent(DevComponent.ConsoleAPI));
+            Button activeButton = sender as Button;
+
+            if (activeButton != null)
+            {
+                DevComponent terminalContext = GetCallingContextType(activeButton);
+
+                TextBox terminalToClear = GetTerminal(terminalContext);
+
+                if (terminalToClear != null)
+                {
+                    Action ClearTerminalText = () =>{ terminalToClear.Text = String.Empty; };
+
+                    InvokeOnUIThread(ClearTerminalText);
+                }
+            }
         }
 
         private void WriteToOutput(DevComponent terminalType, string content)
         {
             TextBox terminal = null;
+            string decodedContent = DecodeLinuxCharacters(content);
 
             switch (terminalType)
             {
@@ -72,11 +98,98 @@ namespace LaunchConsole_APIDev
 
             if (terminal != null)
             {
-                this.Invoke(new MethodInvoker(() =>
+                try
                 {
-                    terminal.AppendText(String.Format("{0}{1}", content, Environment.NewLine));
-                }));
+                    Action AddLineToterminal = () => { terminal.AppendText(String.Format("{0}{1}", decodedContent, Environment.NewLine)); };
+
+                    InvokeOnUIThread(AddLineToterminal);
+                }
+                catch (ObjectDisposedException)
+                {
+                    //Do nothing. The app was just closed.
+                }
+               
             }
+        }
+
+        private string DecodeLinuxCharacters(string originalText)
+        {
+            string decodedText = originalText;
+            
+            //empty is ok, null is bad
+            if (originalText != null)
+            {
+                //remove non ascii characters
+                decodedText = Regex.Replace(decodedText, @"[^\u0000-\u007F]", String.Empty);
+
+                //Remove the characters that Windows terminal could not decipher (they were just linux shell colors)
+                decodedText = Regex.Replace(decodedText, @"\u001b\[[0-9]+m", String.Empty);
+            }
+
+            return decodedText;
+        }
+
+        private TextBox GetTerminal(DevComponent terminalType)
+        {
+            TextBox terminal = null;
+
+            switch (terminalType)
+            {
+                case DevComponent.ConsoleAPI:
+                    terminal = ConsoleApiOutput;
+                    break;
+                case DevComponent.ConsoleWeb:
+                    terminal = ConsoleWebOutput;
+                    break;
+                case DevComponent.FauxEngine:
+                    terminal = FauxEngineOutput;
+                    break;
+            }
+
+            return terminal;
+        }
+
+        private DevComponent GetCallingContextType(Button clickedButton)
+        {
+            DevComponent componentType = DevComponent.None;
+
+            try
+            {
+                string buttonTag = clickedButton.Tag.ToString();
+
+                if (!String.IsNullOrEmpty(buttonTag))
+                {
+                    string buttonTagText = buttonTag.ToLower();
+
+                    switch (buttonTagText)
+                    {
+                        case "faux":
+                            componentType = DevComponent.FauxEngine;
+                            break;
+                        case "api":
+                            componentType = DevComponent.ConsoleAPI;
+                            break;
+                        case "web":
+                            componentType = DevComponent.ConsoleWeb;
+                            break;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return componentType;
+        }
+
+        private void InvokeOnUIThread(Action actiontoPerform)
+        {
+            this.Invoke(new MethodInvoker(() =>
+            {
+                actiontoPerform.Invoke();
+            }));
         }
     }
 }
